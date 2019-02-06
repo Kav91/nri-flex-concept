@@ -1,0 +1,14 @@
+name: bindFlex
+apis: 
+  - name: bind
+    commands: 
+      # - run: cat ./flexConfigs/bind9-rndcOutput ### for testing
+      - run: rndc status
+        split_by: ": "
+      - run: echo "host:$(hostname)"
+        split_by: ":"
+    snake_to_camel: true 
+    perc_to_decimal: true
+    rename_keys:
+      " ": ""
+      cPUsfound: cpusFound
