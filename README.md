@@ -8,6 +8,7 @@
 - As updates and upgrades are made, all integration points reap the benefits
 
 ### Features & Support
+- Linux only currently
 - Run any HTTP/S request, read file, shell command, Database Query, or JMX Query.
 - Consume any JSON, JMX, or RAW command output from the above (Java 7+ is required for JMX to work)
 - Attempt to cleverly flatten to samples
