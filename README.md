@@ -88,6 +88,17 @@ You could specific a single Flex Config, or another config directory
 With these flags, you could also define multiple instances with different configurations of Flex within "nri-flex-config.yml"
 ```
 
+### Testing
+```
+Testing a single config
+./nri-flex -config_file "flexConfigs/redis-cmd-raw-example.yml"
+./nri-flex-mac -config_file "flexConfigs/redis-cmd-raw-example.yml"
+
+Testing all configs in ./flexConfigs
+./nri-flex 
+./nri-flex-mac
+```
+
 ### Installation
 
 - Setup your configuration see inside flexConfigs for examples
