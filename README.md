@@ -47,9 +47,11 @@
 - etcd (shows custom sample keys functionality)
 - Prometheus (vector, matrix, targets supported)
 - RabbitMQ (shows metric parser, and lookup store functionality)
+- Eventstore
 - Elasticsearch (shows inbuilt URL cache functionality)
 - Traefik
 - Kong
+- lighttpd
 - Varnish
 - Redis (more metrics, multi instance support, multi db support) (shows metric parser, snake to camel, perc to decimal, replace keys, rename keys & sub parse functionality)
 - Zookeeper
@@ -102,6 +104,7 @@ Testing all configs in ./flexConfigs
 ### Installation
 
 - Setup your configuration see inside flexConfigs for examples
+- Flex will run everything by default in the default flexConfigs/ folder (so keep what you want before deploy)
 - Review the commented out portions in the install_linux.sh and/or Dockerfile depending on your config setup
 - Run install_linux.sh or build the docker image
 - Alternatively use the install_linux.sh as a guide for setting up
