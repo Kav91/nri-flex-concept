@@ -116,10 +116,10 @@ With these flags, you could also define multiple instances with different config
 - This makes it possible to have multiple containers re-use the same config with different ip/port configurations
 
 #### Flex Discovery Configuration Parameters
-- tt=targetType - are we targetting an img = image or cname = ontainerName?
+- tt=targetType - are we targetting an img = image or cname = containerName? (default "img")
 - t=target - the keyword to target based on the targetType eg. "redis"
-- tm=targetMode - contains, prefix or regex to match the target
-- c=config - which config file will we use to create the dynamic configs from eg. "redis".yml
+- tm=targetMode - contains, prefix or regex to match the target (default "contains")
+- c=config - which config file will we use to create the dynamic configs from eg. "redis" .yml (default to "target")
 - p=port - force set a chosen target port
 - r=reverse - if set eg. reverse=true on nri-flex itself, it will perform a reverse lookup to match against containers (this means you don't have to set labels on individal containers)
 - ip=ipMode - default private can be set to public
