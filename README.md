@@ -119,7 +119,7 @@ With these flags, you could also define multiple instances with different config
 - tt=targetType - are we targetting an img = image or cname = containerName? (default "img")
 - t=target - the keyword to target based on the targetType eg. "redis"
 - tm=targetMode - contains, prefix or regex to match the target (default "contains")
-- c=config - which config file will we use to create the dynamic configs from eg. "redis" .yml (default to "target")
+- c=config - which config file will we use to create the dynamic configs from eg. "redis" .yml (defaults to the "target value")
 - p=port - force set a chosen target port
 - r=reverse - if set eg. reverse=true on nri-flex itself, it will perform a reverse lookup to match against containers (this means you don't have to set labels on individal containers)
 - ip=ipMode - default private can be set to public
