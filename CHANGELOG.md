@@ -1,3 +1,8 @@
+0.1.2-pre
+------
+- Add additional port discovery
+- Switch kubernetes auto discovery to use an environment variable instead to follow consistent format
+
 0.1.1-pre
 ------
 - Change default targetType to image. tt -> "img"

@@ -1,5 +1,5 @@
 # example label to apply -> flexDiscoveryRabbit="t=rabbitmq,c=rabbitmq,tt=img,tm=contains"
-# if using kubernetes -> flexDiscoveryRabbit:"t_rabbitmq.c_rabbitmq.tt_img.tm_contains"
+# if using kubernetes add it as a environment variable
 ### https://www.rabbitmq.com/monitoring.html
 ### your.rabbit.server/api/index.html
 ---

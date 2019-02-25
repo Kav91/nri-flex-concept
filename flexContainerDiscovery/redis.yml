@@ -1,5 +1,5 @@
 # example label to apply -> flexDiscoveryRedis="t=redis,c=redis,tt=img,tm=contains"
-# if using kubernetes -> flexDiscoveryRedis:"t_redis.c_redis.tt_img.tm_contains"
+# if using kubernetes add it as a environment variable
 ---
 name: redisFlex
 apis: 

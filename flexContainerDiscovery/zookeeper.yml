@@ -1,5 +1,5 @@
 # example label to apply -> flexDiscoveryZookeeper="t=zookeeper,c=zookeeper,tt=img,tm=contains"
-# if using kubernetes -> flexDiscoveryZookeeper:"t_zookeeper.c_zookeeper.tt_img.tm_contains"
+# if using kubernetes add it as a environment variable
 ---
 name: zookeeperFlex
 apis: 

@@ -1,5 +1,5 @@
 # example label to apply -> flexDiscoveryTraefik="t=traefik,c=traefik,tt=img,tm=contains"
-# if using kubernetes -> flexDiscoveryTraefik:"t_traefik.c_traefik.tt_img.tm_contains"
+# if using kubernetes add it as a environment variable
 ---
 name: traefikFlex
 global:

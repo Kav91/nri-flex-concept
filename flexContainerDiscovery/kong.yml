@@ -1,5 +1,5 @@
 # example label to apply -> flexDiscoveryKong="t=kong,c=kong,tt=img,tm=contains"
-# if using kubernetes -> flexDiscoveryKong:"t_kong.c_kong.tt_img.tm_contains"
+# if using kubernetes add it as a environment variable
 ---
 # https://docs.konghq.com/0.14.x/admin-api/
 name: kongFlex

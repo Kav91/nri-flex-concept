@@ -1,5 +1,5 @@
 # example label to apply -> flexDiscoveryConsul="t=consul,c=consul,tt=img,tm=contains"
-# if using kubernetes -> flexDiscoveryConsul:"t_consul.c_consul.tt_img.tm_contains"
+# if using kubernetes add it as a environment variable
 # consul api documentation https://www.consul.io/api/index.html
 ---
 name: consulFlex

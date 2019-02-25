@@ -1,5 +1,5 @@
 # example label to apply -> flexDiscoveryTomcat="t=tomcat-jmx,c=tomcat-jmx,tt=img,tm=contains"
-# if using kubernetes -> flexDiscoveryTomcat:"t_tomcat-jmx.c_tomcat-jmx.tt_img.tm_contains"
+# if using kubernetes add it as a environment variable
 ---
 name: tomcatFlex
 global:

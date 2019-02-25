@@ -106,9 +106,9 @@ With these flags, you could also define multiple instances with different config
 #### Flex Auto Container Discovery
 - Requires access to /var/run/docker.sock (same as the New Relic Infrastructure Agent, so it is convenient to bake flex into the newrelic/infrastructure image)
 - Add a label or annotation that contains the keyword - "flexDiscovery"
+- For Kubernetes add it as an environment variable
 - To that same label or annotation add a flex discovery configuration eg. "t=redis,c=redis,tt=img,tm=contains"
 - Complete example                                              flexDiscoveryRedis="t=redis,c=redis,tt=img,tm=contains"
-- K8s example as they don't support "=" or "," characters       flexDiscoveryRedis:"t_redis.c_redis.tt_img.tm_contains"
 - You could have varying configs on one container as well like flexDiscoveryRedis1, flexDiscoveryZookeeper etc.
 - Flex Container Discovery Configs are placed within "flexContainerDiscovery/" directory 
 - For an example see "flexContainerDiscovery/redis.yml" 
