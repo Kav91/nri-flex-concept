@@ -1,3 +1,8 @@
+0.1.3-pre
+------
+- Improve container discovery performance
+- Improve error handling for container discovery
+
 0.1.2-pre
 ------
 - Add additional port discovery
