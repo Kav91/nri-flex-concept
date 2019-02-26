@@ -48,6 +48,8 @@
 - Elasticsearch (shows inbuilt URL cache functionality)
 - Traefik
 - Kong
+- Lighttpd
+- Eventstore
 - etcd (shows custom sample keys functionality)
 - Varnish
 - Prometheus (vector, matrix, targets supported)
@@ -99,17 +101,25 @@ With these flags, you could also define multiple instances with different config
         Enable container auto discovery
   -container_discovery_dir string
         Set directory of auto discovery config files (default "flexContainerDiscovery/")
-  -docker_api_version string
-        Force Docker client API version
+
+nri-flex-config.yml
+---
+integration_name: com.kav.nri-flex
+instances:
+  - name: nri-flex
+    command: metrics
+    arguments:
+      container_discovery: true ### <- set to true to enable
 ```
 
-#### Flex Auto Container Discovery
+#### Container Discovery
 - Requires access to /var/run/docker.sock (same as the New Relic Infrastructure Agent, so it is convenient to bake flex into the newrelic/infrastructure image)
-- Add a label or annotation that contains the keyword - "flexDiscovery"
+- Add a label that contains the keyword - "flexDiscovery" for the container (if using reverse discovery apply to nri-flex container - explained further under parameters)
 - For Kubernetes add it as an environment variable
-- To that same label or annotation add a flex discovery configuration eg. "t=redis,c=redis,tt=img,tm=contains"
+- To that same label add a flex discovery configuration eg. "t=redis,c=redis,tt=img,tm=contains"
 - Complete example                                              flexDiscoveryRedis="t=redis,c=redis,tt=img,tm=contains"
-- You could have varying configs on one container as well like flexDiscoveryRedis1, flexDiscoveryZookeeper etc.
+- If your target is consistent with the config file you could even just have flexDiscoveryRedis="t=redis" and it'll work!
+- You can have varying configs for one or many container as well just set different names eg. flexDiscoveryRedis1, flexDiscoveryRedis2, flexDiscoveryZookeeper etc.
 - Flex Container Discovery Configs are placed within "flexContainerDiscovery/" directory 
 - For an example see "flexContainerDiscovery/redis.yml" 
 - Use ${auto:host} and ${auto:port} anywhere in your config, this will dynamically be substituted per container discovered
@@ -121,7 +131,7 @@ With these flags, you could also define multiple instances with different config
 - tm=targetMode - contains, prefix or regex to match the target (default "contains")
 - c=config - which config file will we use to create the dynamic configs from eg. "redis" .yml (defaults to the "target value")
 - p=port - force set a chosen target port
-- r=reverse - if set eg. reverse=true on nri-flex itself, it will perform a reverse lookup to match against containers (this means you don't have to set labels on individal containers)
+- r=reverse - if set eg. r=true on nri-flex itself, it will perform a reverse lookup to match against containers (this means you don't have to set labels on individal containers)
 - ip=ipMode - default private can be set to public
 - If config is nil, use the target (t), as the yaml file to look up, eg. if target (t) = redis, lookup the config (c) redis.yml if config not set
 
@@ -144,21 +154,25 @@ RUN - with container discovery reverse lookup (ensure -container_discovery is se
 docker run -d --name nri-flex --network=host --cap-add=SYS_PTRACE -l flexDiscoveryRedis="t=redis,c=redis,tt=img,tm=contains,r=true"  -v "/:/host:ro" -v "/var/run/docker.sock:/var/run/docker.sock" -e NRIA_LICENSE_KEY="yourInfraLicenseKey" nri-flex:latest
 ```
 
-### Testing
+### Testing & Debugging
 ```
 Testing a single config
 ./nri-flex -config_file "flexConfigs/redis-cmd-raw-example.yml"
 ./nri-flex-mac -config_file "flexConfigs/redis-cmd-raw-example.yml"
 
-Testing all configs in ./flexConfigs
+Testing all configs in ./flexConfigs (this repo has alot of examples! only keep what you need)
 ./nri-flex 
 ./nri-flex-mac
+
+Debugging
+./nri-flex -force_log <- will spit out additional info to stdout (do not use in production)
+
 ```
 
 ### Installation
 
-- Setup your configuration see inside flexConfigs for examples
-- Flex will run everything by default in the default flexConfigs/ folder (so keep what you want before deploy)
+- Setup your configuration see inside flexConfigs, flexContainerDiscovery & fullConfigExamples for examples
+- Flex will run everything by default in the default flexConfigs/ folder (so only keep what you need before deploying)
 - Review the commented out portions in the install_linux.sh and/or Dockerfile depending on your config setup
 - Run install_linux.sh or build the docker image
 - Alternatively use the install_linux.sh as a guide for setting up
