@@ -135,25 +135,6 @@ instances:
 - ip=ipMode - default private can be set to public
 - If config is nil, use the target (t), as the yaml file to look up, eg. if target (t) = redis, lookup the config (c) redis.yml if config not set
 
-### Installation
-- Setup your configuration
-- Run install_linux.sh or build the docker image
-
-### Docker
-- Set your configs, modify Dockerfile if need be
-- Build & Run Image
-
-```
-BUILD
-docker build -t nri-flex .
-
-RUN - standard
-docker run -d --name nri-flex --network=host --cap-add=SYS_PTRACE -v "/:/host:ro" -v "/var/run/docker.sock:/var/run/docker.sock" -e NRIA_LICENSE_KEY="yourInfraLicenseKey" nri-flex:latest
-
-RUN - with container discovery reverse lookup (ensure -container_discovery is set to true nri-flex-config.yml)
-docker run -d --name nri-flex --network=host --cap-add=SYS_PTRACE -l flexDiscoveryRedis="t=redis,c=redis,tt=img,tm=contains,r=true"  -v "/:/host:ro" -v "/var/run/docker.sock:/var/run/docker.sock" -e NRIA_LICENSE_KEY="yourInfraLicenseKey" nri-flex:latest
-```
-
 ### Testing & Debugging
 ```
 Testing a single config
