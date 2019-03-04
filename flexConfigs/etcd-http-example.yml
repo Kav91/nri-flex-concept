@@ -3,8 +3,6 @@
 name: etcdFlex
 global:
     base_url: http://127.0.0.1:2379/v2/
-    # user: prom
-    # pass: prom
     headers:
       accept: application/json
 apis: 

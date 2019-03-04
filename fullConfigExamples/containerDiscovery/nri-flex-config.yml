@@ -1,4 +1,4 @@
-integration_name: com.kav.nri-flex
+integration_name: com.kav91.nri-flex
 
 instances:
   - name: nri-flex

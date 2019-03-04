@@ -10,6 +10,7 @@
 ### Features & Support
 - Linux only currently
 - Run any HTTP/S request, read file, shell command, Database Query, or JMX Query.
+- Use any existing Prometheus Exporter / Integration
 - Consume any JSON, JMX, or RAW command output from the above (Java 7+ is required for JMX to work)
 - Attempt to cleverly flatten to samples
 - Detect and flatten dimensional data from Prometheus style payloads (vector, matrix, targets supported)
@@ -38,7 +39,9 @@
 - Rename Key // contains replace
 - Keep Keys // keeps only keys you want to keep, and removes the rest
 
-#### Integrations (Count: 30+)
+#### Integrations (Count: 30+) (+All Prometheus Exporters)
+- [Prometheus Exporters](https://prometheus.io/docs/instrumenting/exporters/)
+- [Prometheus Rest API(vector, matrix, targets supported)](https://prometheus.io/docs/prometheus/latest/querying/api/)
 - Consul
 - Vault (shows merge functionality)
 - Bamboo
@@ -52,7 +55,6 @@
 - Eventstore
 - etcd (shows custom sample keys functionality)
 - Varnish
-- Prometheus (vector, matrix, targets supported)
 - Redis (more metrics, multi instance support, multi db support) (shows snake to camel, perc to decimal, replace keys, rename keys & sub parse functionality)
 - Zookeeper
 - OpsGenie
@@ -104,7 +106,7 @@ With these flags, you could also define multiple instances with different config
 
 nri-flex-config.yml
 ---
-integration_name: com.kav.nri-flex
+integration_name: com.kav91.nri-flex
 instances:
   - name: nri-flex
     command: metrics
@@ -135,11 +137,80 @@ instances:
 - ip=ipMode - default private can be set to public
 - If config is nil, use the target (t), as the yaml file to look up, eg. if target (t) = redis, lookup the config (c) redis.yml if config not set
 
+### Prometheus Integrations - [Exporters](https://prometheus.io/docs/instrumenting/exporters/)
+- Supports all Prometheus exporters
+- Flex will attempt to flatten all Prometheus metrics for you to save on events being generated, however you may need to do some minor additional configuration (below) to get your desired output
+- With the automatically flattened event, the histogram & summary, count & sum values are retained
+- If you would like the full qauntiles and buckets, consider flagging on histogram, and/or summary to true
+- Target the /metrics endpoint and set your desired configuration, see further below for options
+- To quickly find out what metrics may need to be in their own samples or merged into the main sample, set -force_log and view the /metrics endpoint you are targetting
+- Check this basic example flexConfigs/prometheus-redis-exporter.yml && for auto discovery flexContainerDiscovery/prometheusRedisExporter.yml 
+
+```
+# Redis Example
+# placed in -> flexConfigs/
+---
+name: prometheusRedisFlex
+apis: 
+  - name: prometheusRedis
+    url: http://localhost:9121/metrics
+    prometheus: 
+      enable: true
+      flattened_event: "prometheusRedisSample" # name of the event_type when metrics are flattened into a single sample
+      # unflatten: true ### <- every prometheus metric will be unflattened into their own sample, other functions will not be available
+      ############           use with caution as this can create a large amount samples
+      ############           it is useful for testing to see the output of metrics you are getting as well
+      key_merge: [cmd] # the same metric may exist multiple times, for different things, if we want to flatten them out we can use this parameter
+      ############        eg. "redis_commands_duration_seconds_total" Metric exists for multiple commands, there is a "cmd" attribute on each metric to distinguish each command
+      ############        so we add "cmd" to the array to flatten it like this eg. "redis_commands_duration_seconds_total.info" = 132 ("info was the command in this case")
+      ###########        db could also be added here, so you could just add to the array eg. key_merge: [cmd,db]
+      sample_keys:
+        prometheusRedisDbSample: db # multiple metrics may exist where they correspond to the same thing like metrics of each particular database
+      ############                     eg. redis_db_keys_expiring and redis_db_keys, both have a "db" key to distinguish each database
+      ############                     this will let us roll up all the metrics that contain the "db" key into a "prometheusRedisDbSample"
+      ############                     we could also use cmd here, if we wanted them in separate samples add for eg. prometheusRedisCmdSample: cmd
+    custom_attributes: # apply any custom attributes as you require
+      serverName: mySuperServer
+    remove_keys:
+      - go_ # we can remove the internal exporter go metrics like this
+    #snake_to_camel: true
+```
+```
+# Etcd Example
+# placed in -> flexConfigs/
+---
+name: prometheusEtcdFlex
+apis: 
+  - name: prometheusEtcd
+    url: http://localhost:2379/metrics
+    prometheus: 
+      enable: true
+      flattened_event: "prometheusEtcdSample"
+      key_merge: [action]
+      sample_keys:
+        prometheusEtcdServiceSample: grpc_service
+```
+```
+# Etcd Example with Container Discovery
+# placed in -> flexContainerDiscovery/
+---
+name: prometheusEtcdFlex
+apis: 
+  - name: prometheusEtcd
+    url: http://${auto:host}:${auto:port}/metrics
+    prometheus: 
+      enable: true
+      flattened_event: "prometheusEtcdSample"
+      key_merge: [action]
+      sample_keys:
+        prometheusEtcdServiceSample: grpc_service
+```
+
 ### Testing & Debugging
 ```
 Testing a single config
 ./nri-flex -config_file "flexConfigs/redis-cmd-raw-example.yml"
-./nri-flex-mac -config_file "flexConfigs/redis-cmd-raw-example.yml"
+./nri-flex-mac -config_file "flexConfigs/redis-cmd-raw-example.yml" # remember to remove the -q0 flag from the command as it's not supported by mac in the example config
 
 Testing all configs in ./flexConfigs (this repo has alot of examples! only keep what you need)
 ./nri-flex 

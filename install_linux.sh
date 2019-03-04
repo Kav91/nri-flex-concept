@@ -27,6 +27,8 @@ cp ./nri-flex /var/db/newrelic-infra/custom-integrations/
 # this will copy all configs, only take what you need
 # cp -avr ./flexConfigs /var/db/newrelic-infra/custom-integrations/
 
+# this will copy all container discovery configs, only take what you need
+# cp -avr ./flexContainerDiscovery /var/db/newrelic-infra/custom-integrations/
 
 echo "Starting NR Infrastructure Agent"
 if [ -f /etc/systemd/system/newrelic-infra.service ]; then

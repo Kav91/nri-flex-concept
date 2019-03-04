@@ -1,3 +1,7 @@
+0.2.0-pre
+------
+- Add Prometheus exporter/integration support
+
 0.1.4-pre
 ------
 - Bug fix - logging incorrectly during single config file use
