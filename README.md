@@ -1,18 +1,150 @@
-# NRI Flex Concept
+# New Relic - Flex
+[![Build Status](https://badge.buildkite.com/fe011ab8474a98a28ac3255e2141ec3887e9accda7d3c31196.svg?branch=master)](https://buildkite.com/kav91/nri-flex)
 
-- Flex is an agnostic AIO integration running on pixie dust (aka the weekend hacking project)
+- Flex is an agnostic AIO New Relic Integration, that can:
+  - Abstract the need for end users to write any code other then to define a configuration yml, allowing you to consume metrics from practically anywhere!
+  - Run any HTTP/S request, read file, shell command, consume from any Prometheus Exporter, Database Query, or JMX Query. (Java 7+ is required for JMX to work)
+  - Can generate New Relic metric samples automatically from almost [any endpoint for almost any payload, useful helper functions exist to tidy up your output neatly](#features--support).
+  - Simplies deployment and configuration as a single Flex integration can be running multiple integrations which would be just config files.
+  - Provides over [200+ Integrations](#integrations)
+  - Has agnostic [Service / Container Discovery](https://github.com/kav91/nri-flex-concept/wiki/Service-Discovery) built-in
+  - As updates and upgrades are made, all Flex Integrations reap the benefits.
+  - Can send data via the New Relic Infrastructure Agent, or the New Relic Insights Event API
 
-### Why?
-- Flex abstracts the need for end users to write any code to consume custom metrics they may need, other then to define a configuration yml
-- Flex can generate New Relic metric samples automatically for almost any payload, useful helper functions exist to tidy up your output neatly
-- As updates and upgrades are made, all integration points reap the benefits
+## Disclaimer
+New Relic has open-sourced this integration to enable monitoring of various technologies. This integration is provided AS-IS WITHOUT WARRANTY OR SUPPORT, although you can report issues and contribute to this integration via GitHub. Support for this integration is available with an Expert Services subscription.
 
-### Features & Support
-- Linux only currently
-- Run any HTTP/S request, read file, shell command, Database Query, or JMX Query.
-- Use any existing Prometheus Exporter / Integration
-- Consume any JSON, JMX, or RAW command output from the above (Java 7+ is required for JMX to work)
+## Requirements
+- Linux
+- Windows (works but not fully tested)
+- New Relic Infrastructure
+
+## Usage
+- [Download the latest compiled release under the Releases section](https://github.com/kav91/nri-flex-concept/releases)
+- [Config Examples](https://github.com/kav91/nri-flex-concept/tree/master/cmd/flex/examples)
+- [Testing](#testing)
+- [Standard Config Layout](#standard-configuration)
+- [Installation](#installation)
+
+## Further Documentation
+- [Features & Support](#features--support)
+- [Existing Integrations](#integrations)
+- [Wiki](https://github.com/kav91/nri-flex-concept/wiki)
+- [Available Functions](https://github.com/kav91/nri-flex-concept/wiki/Functions)
+- [Using Service Discovery](https://github.com/kav91/nri-flex-concept/wiki/Service-Discovery)
+- [Using Prometheus-Integrations-(Exporters)](https://github.com/kav91/nri-flex-concept/wiki/Prometheus-Integrations-(Exporters))
+- [Creating your own Flex configuration(s)](https://github.com/kav91/nri-flex-concept/wiki/Creating-Flex-Configs)
+
+---
+
+## Testing
+```
+- [Compiled Releases](https://github.com/kav91/nri-flex-concept/releases)
+
+Testing a single config
+./nri-flex -config_file "examples/flexConfigs/redis-cmd-raw-example.yml"
+./nri-flex-mac -config_file "examples/flexConfigs/redis-cmd-raw-example.yml" (take the binary from the mac release)
+
+Running without any flags, will default to run all configs within ./flexConfigs
+./nri-flex 
+./nri-flex-mac (take the binary from the mac release)
+```
+
+## Standard Configuration
+- Default configuration looks for Flex config files in /flexConfigs.
+- Run ./nri-flex -help for all available flags.
+- Flex has an Event Limiter built in - the event_limit argument is available and there to ensure you don't spam heaps of events unknowingly, the default is 500 per execution/run, which can be dialled up if required.
+
+``` 
+The below two flags you could specific a single Flex Config, or another config directory.
+
+-config_dir string
+        Set directory of config files (default "flexConfigs/")
+-config_file string
+        Set a specific config file
+
+With these flags, you could also define multiple instances with different configurations of Flex within "nri-flex-config.yml" 
+```
+
+## Installation
+
+- Setup your configuration(s) see inside examples/flexConfigs for examples
+- Flex will run everything by default in the default flexConfigs/ folder (so keep what you want before deploy)
+- Flex provides two options for ingesting your events, via the New Relic Infrastructure Agent, & the New Relic Insights Event API
+
+### New Relic Infrastructure Agent
+- Review the commented out portions in the install_linux.sh and/or Dockerfile depending on your config setup
+- Run scripts/install_linux.sh or build the docker image
+- Alternatively use the scripts/install_linux.sh as a guide for setting up (or scripts/install_win.bat)
+
+#### Typical file/directory structure layout:
+```
+/etc/newrelic-infra/integrations.d/nri-flex-config.yml <- config 
+(/examples/nri-flex-config.yml)
+
+/var/db/newrelic-infra/custom-integrations/nri-flex-def-nix.yml <- definition 
+(/examples/nri-flex-def-nix.yml)
+
+/var/db/newrelic-infra/custom-integrations/nri-flex <- binary 
+(compiled binary)
+
+/var/db/newrelic-infra/custom-integrations/flexConfigs/ <- standard flexConfigs (refer to examples here: /examples/flexConfigs)
+
+/var/db/newrelic-infra/custom-integrations/flexContainerDiscovery/ <- if using container discovery 
+(refer to examples here: /examples/flexContainerDiscovery)
+```
+
+### New Relic Insights Event API
+
+- Able to execute the binary wherever and however you like
+- The Flex specific config folders will remain the same
+- To use this method, create an Insert API Key from here: https://insights.newrelic.com/accounts/YOUR_ACCOUNT_ID/manage/api_keys
+- Use the below flags to configure
+```
+  -insights_api_key string
+        Set Insights API key - from link above
+  -insights_url string
+        Set Insights URL eg. "https://insights-collector.newrelic.com/v1/accounts/YOUR_ACCOUNT_ID/events"
+  -insights_output bool
+        Output the events generated to standard out true/false
+```
+- Run ./nri-flex -help for all available options
+
+#### Typical file/directory structure layout:
+```
+From any location:
+
+nri-flex <- binary
+# below folders in the same location as the binary unless you've specific a different location
+flexConfigs/ <- folder
+flexContainerDiscovery/ <- folder
+```
+
+## Docker
+- Set your configs, modify Dockerfile if need be
+- Build & Run Image
+
+```
+Example:
+
+BUILD
+docker build -t nri-flex .
+
+RUN - standard
+docker run -d --name nri-flex --network=host --cap-add=SYS_PTRACE -v "/:/host:ro" -v "/var/run/docker.sock:/var/run/docker.sock" -e NRIA_LICENSE_KEY="yourInfraLicenseKey" nri-flex:latest
+
+RUN - with container discovery reverse lookup (ensure -container_discovery is set to true nri-flex-config.yml)
+docker run -d --name nri-flex --network=host --cap-add=SYS_PTRACE -l flexDiscoveryRedis="t=redis,c=redis,tt=img,tm=contains,r=true"  -v "/:/host:ro" -v "/var/run/docker.sock:/var/run/docker.sock" -e NRIA_LICENSE_KEY="yourInfraLicenseKey" nri-flex:latest
+
+Example: Run Redis with a flex discovery label
+docker run -it -p 9696:6379 --label flexDiscoveryRedis="t=redis,c=redis,tt=img,tm=contains" --name redis-svr -d redis
+```
+
+## Features & Support
+- Run any HTTP/S request, read file, shell command, consume from any Prometheus Exporter, Database Query, or JMX Query. (Java 7+ is required for JMX to work)
+- Service / Container Discovery
 - Attempt to cleverly flatten to samples
+- Use environment variables anywhere within config files (eg. using double dollar signs -> $$MY_ENV_VAR)
 - Detect and flatten dimensional data from Prometheus style payloads (vector, matrix, targets supported)
 - Merge different samples and outputs together
 - Key Remover & Replacer
@@ -27,21 +159,12 @@
 - SubParse functionality (see redis config for an example)
 - LookUp Store - save attributes from previously generated samples to use in requests later (see rabbit example)
 - LazyFlatten - for arrays
-- Inbuilt data caching - useful for reusing existing data and processing samples at different points
+- Inbuilt data caching - useful for processing samples at different points
+- [+more here](https://github.com/kav91/nri-flex-concept/wiki/Functions)
 
-#### Order of Data Finalization
-- Strip Keys - Happens before attribute modifiction and auto smart flattening, useful to get rid of unneeded data and arrays
-- Remove Keys
-- ToLower Case
-- Convert Space
-- snake_case to camelCase
-- Replace Keys // uses regex to find keys to replace
-- Rename Key // contains replace
-- Keep Keys // keeps only keys you want to keep, and removes the rest
-
-#### Integrations (Count: 30+) (+All Prometheus Exporters)
-- [Prometheus Exporters](https://prometheus.io/docs/instrumenting/exporters/)
-- [Prometheus Rest API(vector, matrix, targets supported)](https://prometheus.io/docs/prometheus/latest/querying/api/)
+## Integrations 
+- All Prometheus Exporters
+- Prometheus Rest API (vector, matrix, targets supported)
 - Consul
 - Vault (shows merge functionality)
 - Bamboo
@@ -51,8 +174,6 @@
 - Elasticsearch (shows inbuilt URL cache functionality)
 - Traefik
 - Kong
-- Lighttpd
-- Eventstore
 - etcd (shows custom sample keys functionality)
 - Varnish
 - Redis (more metrics, multi instance support, multi db support) (shows snake to camel, perc to decimal, replace keys, rename keys & sub parse functionality)
@@ -74,180 +195,3 @@
 - tomcat - via jmx
 - bind9
 - df display disk & inode info (shows horizontal split functionality)
-- PHP-FPM (Contributor: goldenplec)
-
-### How to create Flex config(s)?
-- Easiest way is to take a look at the examples and their inline comments
-
-### Standard Configuration
-- Default configuration looks for Flex config files in /flexConfigs
-- Run ./nri-flex -help for more info
-``` 
-- This integration also supports the following two flags  
-You could specific a single Flex Config, or another config directory
--config_dir string
-        Set directory of config files (default "flexConfigs/")
--config_file string
-        Set a specific config file
-
-With these flags, you could also define multiple instances with different configurations of Flex within "nri-flex-config.yml" 
-```
-
-### Flex Auto Container Discovery 
-- Flex has the capability to auto discovery containers in your surrounding environment, and dynamically monitor them regardless of changing IP addresses and ports
-- See flexContainerDiscovery/ for examples
-
-#### Configuration
-```
-  -container_discovery
-        Enable container auto discovery
-  -container_discovery_dir string
-        Set directory of auto discovery config files (default "flexContainerDiscovery/")
-
-nri-flex-config.yml
----
-integration_name: com.kav91.nri-flex
-instances:
-  - name: nri-flex
-    command: metrics
-    arguments:
-      container_discovery: true ### <- set to true to enable
-```
-
-#### Container Discovery
-- Requires access to /var/run/docker.sock (same as the New Relic Infrastructure Agent, so it is convenient to bake flex into the newrelic/infrastructure image)
-- Add a label that contains the keyword - "flexDiscovery" for the container (if using reverse discovery apply to nri-flex container - explained further under parameters)
-- For Kubernetes add it as an environment variable
-- To that same label add a flex discovery configuration eg. "t=redis,c=redis,tt=img,tm=contains"
-- Complete example                                              flexDiscoveryRedis="t=redis,c=redis,tt=img,tm=contains"
-- If your target is consistent with the config file you could even just have flexDiscoveryRedis="t=redis" and it'll work!
-- You can have varying configs for one or many container as well just set different names eg. flexDiscoveryRedis1, flexDiscoveryRedis2, flexDiscoveryZookeeper etc.
-- Flex Container Discovery Configs are placed within "flexContainerDiscovery/" directory 
-- For an example see "flexContainerDiscovery/redis.yml" 
-- Use ${auto:host} and ${auto:port} anywhere in your config, this will dynamically be substituted per container discovered
-- This makes it possible to have multiple containers re-use the same config with different ip/port configurations
-
-#### Flex Discovery Configuration Parameters
-- tt=targetType - are we targetting an img = image or cname = containerName? (default "img")
-- t=target - the keyword to target based on the targetType eg. "redis"
-- tm=targetMode - contains, prefix or regex to match the target (default "contains")
-- c=config - which config file will we use to create the dynamic configs from eg. "redis" .yml (defaults to the "target value")
-- p=port - force set a chosen target port
-- r=reverse - if set eg. r=true on nri-flex itself, it will perform a reverse lookup to match against containers (this means you don't have to set labels on individal containers)
-- ip=ipMode - default private can be set to public
-- If config is nil, use the target (t), as the yaml file to look up, eg. if target (t) = redis, lookup the config (c) redis.yml if config not set
-
-### Prometheus Integrations - [Exporters](https://prometheus.io/docs/instrumenting/exporters/)
-- Supports all Prometheus exporters
-- Flex will attempt to flatten all Prometheus metrics for you to save on events being generated, however you may need to do some minor additional configuration (below) to get your desired output
-- With the automatically flattened event, the histogram & summary, count & sum values are retained
-- If you would like the full qauntiles and buckets, consider flagging on histogram, and/or summary to true
-- Target the /metrics endpoint and set your desired configuration, see further below for options
-- To quickly find out what metrics may need to be in their own samples or merged into the main sample, set -force_log and view the /metrics endpoint you are targetting
-- Check this basic example flexConfigs/prometheus-redis-exporter.yml && for auto discovery flexContainerDiscovery/prometheusRedisExporter.yml 
-
-```
-# Redis Example
-# placed in -> flexConfigs/
----
-name: prometheusRedisFlex
-apis: 
-  - name: prometheusRedis
-    url: http://localhost:9121/metrics
-    prometheus: 
-      enable: true
-      flattened_event: "prometheusRedisSample" # name of the event_type when metrics are flattened into a single sample
-      # unflatten: true ### <- every prometheus metric will be unflattened into their own sample, other functions will not be available
-      ############           use with caution as this can create a large amount samples
-      ############           it is useful for testing to see the output of metrics you are getting as well
-      key_merge: [cmd] # the same metric may exist multiple times, for different things, if we want to flatten them out we can use this parameter
-      ############        eg. "redis_commands_duration_seconds_total" Metric exists for multiple commands, there is a "cmd" attribute on each metric to distinguish each command
-      ############        so we add "cmd" to the array to flatten it like this eg. "redis_commands_duration_seconds_total.info" = 132 ("info was the command in this case")
-      ###########        db could also be added here, so you could just add to the array eg. key_merge: [cmd,db]
-      sample_keys:
-        prometheusRedisDbSample: db # multiple metrics may exist where they correspond to the same thing like metrics of each particular database
-      ############                     eg. redis_db_keys_expiring and redis_db_keys, both have a "db" key to distinguish each database
-      ############                     this will let us roll up all the metrics that contain the "db" key into a "prometheusRedisDbSample"
-      ############                     we could also use cmd here, if we wanted them in separate samples add for eg. prometheusRedisCmdSample: cmd
-    custom_attributes: # apply any custom attributes as you require
-      serverName: mySuperServer
-    remove_keys:
-      - go_ # we can remove the internal exporter go metrics like this
-    #snake_to_camel: true
-```
-```
-# Etcd Example
-# placed in -> flexConfigs/
----
-name: prometheusEtcdFlex
-apis: 
-  - name: prometheusEtcd
-    url: http://localhost:2379/metrics
-    prometheus: 
-      enable: true
-      flattened_event: "prometheusEtcdSample"
-      key_merge: [action]
-      sample_keys:
-        prometheusEtcdServiceSample: grpc_service
-```
-```
-# Etcd Example with Container Discovery
-# placed in -> flexContainerDiscovery/
----
-name: prometheusEtcdFlex
-apis: 
-  - name: prometheusEtcd
-    url: http://${auto:host}:${auto:port}/metrics
-    prometheus: 
-      enable: true
-      flattened_event: "prometheusEtcdSample"
-      key_merge: [action]
-      sample_keys:
-        prometheusEtcdServiceSample: grpc_service
-```
-
-### Testing & Debugging
-```
-Testing a single config
-./nri-flex -config_file "flexConfigs/redis-cmd-raw-example.yml"
-./nri-flex-mac -config_file "flexConfigs/redis-cmd-raw-example.yml" # remember to remove the -q0 flag from the command as it's not supported by mac in the example config
-
-Testing all configs in ./flexConfigs (this repo has alot of examples! only keep what you need)
-./nri-flex 
-./nri-flex-mac
-
-Debugging
-./nri-flex -force_log <- will spit out additional info to stdout (do not use in production)
-
-```
-
-### Installation
-
-- Setup your configuration see inside flexConfigs, flexContainerDiscovery & fullConfigExamples for examples
-- Flex will run everything by default in the default flexConfigs/ folder (so only keep what you need before deploying)
-- Review the commented out portions in the install_linux.sh and/or Dockerfile depending on your config setup
-- Run install_linux.sh or build the docker image
-- Alternatively use the install_linux.sh as a guide for setting up
-
-### Docker
-- Set your configs, modify Dockerfile if need be
-- Build & Run Image
-
-```
-BUILD
-docker build -t nri-flex .
-
-RUN - standard
-docker run -d --name nri-flex --network=host --cap-add=SYS_PTRACE -v "/:/host:ro" -v "/var/run/docker.sock:/var/run/docker.sock" -e NRIA_LICENSE_KEY="yourInfraLicenseKey" nri-flex:latest
-
-RUN - with container discovery reverse lookup (ensure -container_discovery is set to true nri-flex-config.yml)
-docker run -d --name nri-flex --network=host --cap-add=SYS_PTRACE -l flexDiscoveryRedis="t=redis,c=redis,tt=img,tm=contains,r=true"  -v "/:/host:ro" -v "/var/run/docker.sock:/var/run/docker.sock" -e NRIA_LICENSE_KEY="yourInfraLicenseKey" nri-flex:latest
-
-Example: Run Redis with a flex discovery label
-docker run -it -p 9696:6379 --label flexDiscoveryRedis="t=redis,c=redis,tt=img,tm=contains" --name redis-svr -d redis
-```
-
-## Todo
-- More doc's on all available features
-
-
