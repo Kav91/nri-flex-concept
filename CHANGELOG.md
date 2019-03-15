@@ -1,7 +1,7 @@
 0.3.4-pre
 ------
 - Add Insights support
-- Add Envrionment variable support
+- Add Environment variable support
 
 0.2.0-pre
 ------

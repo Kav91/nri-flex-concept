@@ -20,8 +20,7 @@ New Relic has open-sourced this integration to enable monitoring of various tech
 - New Relic Infrastructure
 
 ## Usage
-- [Download the latest compiled release under the Releases section](https://github.com/kav91/nri-flex-concept/releases)
-- [Config Examples](https://github.com/kav91/nri-flex-concept/tree/master/cmd/flex/examples)
+- See config examples
 - [Testing](#testing)
 - [Standard Config Layout](#standard-configuration)
 - [Installation](#installation)
@@ -39,7 +38,6 @@ New Relic has open-sourced this integration to enable monitoring of various tech
 
 ## Testing
 ```
-- [Compiled Releases](https://github.com/kav91/nri-flex-concept/releases)
 
 Testing a single config
 ./nri-flex -config_file "examples/flexConfigs/redis-cmd-raw-example.yml"
