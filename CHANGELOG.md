@@ -1,3 +1,13 @@
+0.4.0-pre
+------
+- Update database parser
+
+0.3.9-pre
+------
+- Add Value Parser
+- Add Pluck Numbers
+- Fix event_type for databases
+
 0.3.8-pre
 ------
 - Update logging, 

@@ -6,7 +6,7 @@ apis:
       open: true
     custom_attributes: # applies to all queries
       host: myDbServer
-    queries: 
+    db_queries: 
       - name: mysqlSessionSample
         run: Select * from sys.dm_exec_sessions
         custom_attributes: # can apply additional at a nested level
