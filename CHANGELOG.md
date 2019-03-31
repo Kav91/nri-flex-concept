@@ -1,3 +1,35 @@
+0.4.9-pre
+------
+- Fix Prometheus histogram sum & count metrics
+
+0.4.8-pre
+------
+- Add math functionality
+- Add command timeout configurability
+- Add timestamp functionality
+- Don't add blank command samples
+- Nested custom attributes for commands
+
+0.4.7-pre
+------
+- Allow commands to process cached url data
+- Add command cache & line_start option
+- Change line_limit to line_end (to align with line_start)
+
+0.4.6-pre
+------
+- If content-type header is not returned, attempt to validate if the payload is JSON, and continue to process as normal
+
+0.4.5-pre
+------
+- Add several TLS options, that can be used Global, or under API (with enable flag)
+- Default HTTP InsecureSkipVerify: false
+
+0.4.4-pre
+------
+- Default HTTP InsecureSkipVerify: true
+- Move Internal packages to full import paths
+
 0.4.3-pre
 ------
 - Update Prometheus parsing 
