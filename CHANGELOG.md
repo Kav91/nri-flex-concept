@@ -1,3 +1,19 @@
+0.5.2-pre
+------
+- Update Flex Event Counter to use sync and avoid concurrent map writes
+- Rewrite Lookup Processor - more robust, supports multiple lookups and can be used in any part of a config not just url
+
+0.5.1-pre
+------
+- Additional JSON Handling
+- Key prefix functionality for any samples
+
+0.5.0-pre
+------
+- Add value_transformer
+- Deprecate replace_keys, but keep backwards compatibility temporarily
+- rename_keys now uses regex matching
+
 0.4.9-pre
 ------
 - Fix Prometheus histogram sum & count metrics
