@@ -5,26 +5,22 @@ name: redisFlex
 apis: 
   - name: redis
     commands: 
-      - run: (printf "info\r\n"; sleep 1) | nc 127.0.0.1 6379 # or even ### run: "redis-cli -h 127.0.0.1 -p 6379 info" ### (depends on redis-cli)
-        split_by: ":"
-      - run: echo "zHost:$(hostname)"
+      - run: if (printf "info\r\n"; sleep 1) | nc -q0 127.0.0.1 6379; then echo success; else (printf "info\r\n"; sleep 1) | nc 127.0.0.1 6379; fi
+      ### if you know whether you have the minus q option or not, then just do
+      ### - run: (printf "info\r\n"; sleep 1) | nc -q0 127.0.0.1 6379
+      ### or without - run: (printf "info\r\n"; sleep 1) | nc 127.0.0.1 6379
+      ### or if you have the redis-cli available - run: "redis-cli -h 127.0.0.1 -p 6379 info" ### (depends on redis-cli)
         split_by: ":"
     remove_keys: # remove any keys that contain any of the following strings
       - human
     snake_to_camel: true 
     perc_to_decimal: true
-    # replace_keys:
-    #   os: someOtherOs # replaces os > operatingSystem (exact match replace)
-    rename_keys:
-      Host: opSystem # replaces Host > opSystem (contains match replace within key) # useful for updating multiple keys
     sub_parse:
       - type: prefix
         key: db
         split_by:
           - ","
           - "="
-    custom_attributes:
-      myCustomAttr: theValue
     metric_parser:
       metrics:
         totalNetInputBytes: RATE

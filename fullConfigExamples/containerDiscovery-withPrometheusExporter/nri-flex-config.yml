@@ -1,9 +1,0 @@
-integration_name: com.kav91.nri-flex
-
-instances:
-  - name: nri-flex
-    command: metrics
-    arguments:
-      container_discovery: true
-    labels:
-      owner: cloud

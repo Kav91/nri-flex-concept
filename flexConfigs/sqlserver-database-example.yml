@@ -1,7 +1,7 @@
 name: sqlserverDbFlex
 apis: 
   - database: sqlserver
-    db_conn: server=apac2.asdasd.ap-southeast-2.rds.amazonaws.com;user id=hithere;database=master;encrypt=disable;password=byethere
+    db_conn: server=myserver.asdasd.ap-southeast-2.rds.amazonaws.com;user id=hithere;database=master;encrypt=disable;password=byethere
     logging:
       open: true
     custom_attributes: # applies to all queries
