@@ -1,3 +1,32 @@
+0.6.3-pre
+------
+- Assign variable stores if nil
+- Store lookups earlier
+
+0.6.2-pre
+------
+- Update Examples
+- Update container discovery ipMode defaulting
+
+0.6.1-pre
+------
+- Allow regex matching feature to work with cache output
+- Update examples and configs
+- Fix event limiter counter not being unlocked
+- Add CA Support to TLSConfig for HTTP requests
+
+0.6.0-pre
+------
+- Add net dial functionality
+- Add lookup file functionality
+- Add ability to run Flex as a Lambda
+- Add metric api functionality
+- Add NR Infra events & inventory support, and granular entity control
+- Add split_objects functionality
+- Switch to logrus package
+- Improve logging
+- Refactor various areas
+
 0.5.5-pre
 ------
 - Add regex multi matching and splitting functionality
