@@ -1,3 +1,47 @@
+0.6.9-pre
+------
+- No functional changes
+- Configs and README updated
+
+0.6.8-pre
+------
+- Improve container discovery
+- Ignore New Relic containers
+- Add synchronous config processing capability
+- Don't run process discovery if container
+- Add one liner S3 install to README
+- Detect Kubernetes
+
+0.6.7-pre
+------
+- Add AWS KMS & Hashicorp Vault secret capability
+- Add Fargate Container Discovery capability
+- Add uri_path option to JMX options
+- Update Status Sample
+
+0.6.6-pre
+------
+- Refactor cmd entry point
+- Improve Lambda support & add ingest feature
+- Update Flex Status Sample
+
+0.6.5-pre
+------
+- Add SAP HANA Database Support
+- Update discovery logic
+
+0.6.4-pre
+------
+- Improve timestamp support
+- Add support to recurse through folders in flexConfigs
+- Add git syncing support
+- Update flexStatusSample
+- Improve lookup checking
+- Update examples
+- Adjust TLS config - only apply RootCAs if tls config enable = true
+- Do not log if VERBOSE env is set
+- - Makes NR Infra agent log "cannot handle plugin output"
+
 0.6.3-pre
 ------
 - Assign variable stores if nil
