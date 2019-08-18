@@ -1,3 +1,28 @@
+0.7.4-pre
+------
+- Inherit parent attributes capability (currently works with start_keys)
+- Improve/Fix key renamer logic (lost functionality in previous release)
+
+0.7.3-pre
+------
+- Bug fix key renamer/replacer (thx prodjito)
+- Update examples
+
+0.7.2-pre
+------
+- Improve self container id check
+
+0.7.1-pre
+------
+- Don't run process discovery for Lambda
+- Add container_discovery environment variable
+- Update examples
+
+0.7.0-pre
+------
+- Update environment variable handling
+- Update linux s3 install script
+
 0.6.9-pre
 ------
 - No functional changes
